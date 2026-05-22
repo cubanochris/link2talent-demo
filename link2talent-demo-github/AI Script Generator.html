@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Link2Talent — AI Call Script Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D0A;--bg2:#181410;--card:#221A12;--bdr:#3C2E20;--txt:#FAF8F4;--mute:#8A7866;--dim:#6A5E4E;--acc:#D97706;--gold:#F0A020;--purp:#7C3AED;--red:#F43F5E;--green:#22C55E;--r:14px;--rs:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;line-height:1.5}
+button,input,select,textarea{font-family:inherit;color:inherit}
+
+/* ── Sticky banner ── */
+.conf{background:var(--purp);color:#fff;text-align:center;font-size:11px;font-weight:700;letter-spacing:2px;padding:8px 0;text-transform:uppercase;position:sticky;top:0;z-index:100}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(160deg,#0C0A07 0%,#181410 100%);padding:40px 24px 34px;text-align:center;border-bottom:1px solid var(--bdr);position:relative;overflow:hidden}
+.hero-glow{position:absolute;border-radius:50%;pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
+.logo-row{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.logo-wm{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px}
+.badge{display:inline-block;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);border-radius:100px;padding:5px 16px;font-size:11px;color:#C4B5FD;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,4vw,30px);font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.hero p{font-size:13px;color:var(--mute);line-height:1.7;max-width:480px;margin:0 auto}
+
+/* ── Layout ── */
+.wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px}
+.sec-label{font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+
+/* ── Cards / sections ── */
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;margin-bottom:16px}
+
+/* ── Presets ── */
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset-btn{padding:8px 16px;border-radius:var(--rs);border:1.5px solid var(--bdr);background:var(--bg2);color:var(--mute);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.preset-btn:hover{border-color:var(--acc);color:var(--acc)}
+.preset-btn.active{background:rgba(217,119,6,.1);border-color:var(--acc);color:var(--acc)}
+.preset-count{font-size:11px;opacity:.6;margin-left:4px;font-weight:400}
+
+/* ── Goal grid ── */
+.cat-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;margin-top:14px}
+.goal-grid{display:flex;flex-wrap:wrap;gap:8px}
+.goal-item{display:flex;align-items:flex-start;gap:8px;background:var(--bg);border:1px solid var(--bdr);border-radius:var(--rs);padding:10px 12px;cursor:pointer;transition:all .15s;min-width:200px;flex:1 1 200px}
+.goal-item:hover{border-color:rgba(217,119,6,.4)}
+.goal-item.selected{background:rgba(217,119,6,.07);border-color:var(--acc)}
+.goal-item input[type=checkbox]{accent-color:var(--acc);width:14px;height:14px;flex-shrink:0;margin-top:2px;cursor:pointer}
+.goal-name{font-size:12.5px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.goal-desc{font-size:11px;color:var(--mute);line-height:1.45}
+.goal-dur{font-size:10px;color:var(--dim);margin-top:2px}
+.sel-count{font-size:12px;color:var(--acc);font-weight:600;margin-top:10px}
+
+/* ── Settings ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}}
+.field-label{display:block;font-size:10px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+select,textarea,input[type=text]{width:100%;padding:9px 11px;border-radius:var(--rs);border:1px solid var(--bdr);background:var(--card);color:var(--txt);font-size:13px;outline:none;transition:border-color .15s}
+select:focus,textarea:focus,input[type=text]:focus{border-color:var(--acc)}
+input[type=text]::placeholder{color:var(--dim)}
+textarea{resize:vertical;line-height:1.55}
+.slider-head{display:flex;justify-content:space-between;margin-bottom:6px;font-size:12.5px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;background:var(--bdr);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--acc);box-shadow:0 2px 5px rgba(0,0,0,.35);border:2px solid rgba(255,255,255,.15)}
+.slider-range{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:3px}
+.toggle-row{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer}
+.toggle-row input[type=checkbox]{accent-color:var(--acc);width:15px;height:15px;cursor:pointer}
+.toggle-row span{font-size:13px;color:var(--mute)}
+
+/* ── Generate button ── */
+.gen-btn{display:block;width:100%;padding:14px 20px;border-radius:10px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;margin:20px 0}
+.gen-btn.ready{background:var(--acc);color:#fff}
+.gen-btn.ready:hover{background:#C46610}
+.gen-btn.disabled{background:var(--bdr);color:var(--dim);cursor:not-allowed}
+.gen-btn.loading{background:#92400E;color:#fff;cursor:wait}
+
+/* ── Error ── */
+.err-box{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);border-radius:var(--rs);padding:12px 16px;color:#FDA4AF;font-size:13px;margin-bottom:16px;display:none}
+
+/* ── Output ── */
+.output-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;display:none}
+.out-header{background:var(--card);padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.out-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700}
+.out-meta{font-size:11.5px;color:var(--mute);margin-top:2px}
+.copy-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--bdr);background:var(--bg);color:var(--mute);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.copy-btn:hover{border-color:var(--acc);color:var(--acc)}
+.tab-nav{display:flex;border-bottom:1px solid var(--bdr)}
+.tab-nav button{padding:10px 18px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;border-bottom:2px solid transparent;color:var(--mute)}
+.tab-nav button.active{color:var(--acc);border-bottom-color:var(--acc)}
+.out-body{padding:20px}
+
+/* ── Script blocks ── */
+.script-block{border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.block-head{background:var(--card);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bdr)}
+.block-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.block-copy{font-size:11px;padding:2px 8px;border-radius:5px;border:1px solid var(--bdr);background:var(--bg);color:var(--mute);cursor:pointer}
+.block-copy:hover{border-color:var(--acc);color:var(--acc)}
+.block-body{padding:14px}
+.spoken{font-style:italic;font-size:13.5px;color:var(--txt);margin-bottom:6px;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:6px;line-height:1.5}
+.spoken::before{content:'"';opacity:.4}
+.spoken::after{content:'"';opacity:.4}
+.purpose{font-size:12px;color:var(--mute);margin-bottom:10px}
+.responses{margin-top:10px}
+.resp-head{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.resp-item{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.resp-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;margin-top:2px;flex-shrink:0}
+.resp-tag.positive{background:rgba(34,197,94,.1);color:#4ade80}
+.resp-tag.negative{background:rgba(244,63,94,.1);color:#fb7185}
+.resp-tag.unclear{background:rgba(138,120,102,.15);color:var(--mute)}
+.resp-text{font-size:12px;color:var(--mute);font-style:italic;line-height:1.5}
+.closing-item{margin-bottom:8px}
+.closing-outcome{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.note-item{font-size:12.5px;color:var(--mute);margin-bottom:4px;padding-left:14px;position:relative;line-height:1.5}
+.note-item::before{content:'→';position:absolute;left:0;color:var(--acc);font-size:11px}
+pre{background:var(--card);border-radius:10px;padding:16px;font-size:11.5px;overflow:auto;white-space:pre-wrap;color:#E8E4DE;line-height:1.6;max-height:500px}
+
+/* ── Compatibility warning ── */
+.compat-warn{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.2);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--gold);margin-top:8px;display:none}
+</style>
+</head>
+<body>
+
+<div class="conf">🔒 Confidential — Internal Use Only — Link2Talent — Do Not Share With Clients</div>
+
+<div class="hero">
+  <div class="hero-glow" style="width:400px;height:400px;top:-150px;right:-80px;background:radial-gradient(circle,rgba(124,58,237,0.09),transparent 70%)"></div>
+  <div class="hero-glow" style="width:300px;height:300px;bottom:-120px;left:-50px;background:radial-gradient(circle,rgba(217,119,6,0.07),transparent 70%)"></div>
+  <div class="hero-inner">
+    <div class="logo-row">
+      <svg width="28" height="28" viewBox="0 0 44 44" fill="none">
+        <path d="M10 7L10 36L36 36" stroke="#D97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="10" cy="7" r="4" fill="#FAF8F4"/>
+        <circle cx="10" cy="36" r="4" fill="#D97706"/>
+        <circle cx="36" cy="36" r="4" fill="#FAF8F4"/>
+        <path d="M14 11C28 11 33 18 33 32" stroke="#D97706" stroke-width="1.5" stroke-dasharray="3 4" fill="none"/>
+      </svg>
+      <span class="logo-wm">Link<span style="color:#D97706">2</span>Talent</span>
+    </div>
+    <div class="badge">✦ AI Script Generator</div>
+    <h1>Call Script Generator</h1>
+    <p>Select your goals, pick a tone, and let Claude write a ready-to-use AI voice receptionist script in seconds.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ── Presets ── -->
+  <div class="card">
+    <div class="sec-label">Quick Start — Presets</div>
+    <div class="preset-row" id="presetRow"></div>
+  </div>
+
+  <!-- ── Goal Selection ── -->
+  <div class="card">
+    <div class="sec-label">Goals — Select One or More</div>
+    <div id="goalGrid"></div>
+    <div class="sel-count" id="selCount" style="display:none"></div>
+    <div class="compat-warn" id="compatWarn"></div>
+  </div>
+
+  <!-- ── Settings ── -->
+  <div class="card">
+    <div class="sec-label">Settings</div>
+
+    <!-- Business Name + Language row -->
+    <div class="two-col" style="margin-bottom:14px">
+      <div>
+        <label class="field-label" for="businessName">Business Name <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--red)">*</span></label>
+        <input type="text" id="businessName" placeholder="Enter your business name" oninput="updateGenBtn()">
+      </div>
+      <div>
+        <label class="field-label" for="langSelect">Language</label>
+        <select id="langSelect">
+          <option value="english">🇺🇸 English</option>
+          <option value="spanish">🇪🇸 Spanish (Español)</option>
+          <option value="portuguese">🇧🇷 Portuguese (Português)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Business Description -->
+    <div style="margin-bottom:14px">
+      <label class="field-label" for="bizDesc">Business Description <span style="font-weight:400;text-transform:none;font-size:10px">(optional)</span></label>
+      <textarea id="bizDesc" rows="2" placeholder="E.g. We are a med spa offering aesthetic treatments, laser therapy, and wellness consultations."></textarea>
+    </div>
+
+    <!-- Tone + Duration row -->
+    <div class="two-col" style="margin-bottom:14px">
+      <div>
+        <label class="field-label" for="toneSelect">Tone</label>
+        <select id="toneSelect">
+          <option value="professional">Professional — Formal, polished, business-appropriate</option>
+          <option value="friendly">Friendly — Warm, conversational, uses first names</option>
+          <option value="urgent">Urgent — Direct, action-oriented, time-sensitive</option>
+          <option value="empathetic">Empathetic — Patient, validating, supportive</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Max Duration: <span id="durLabel">5 min</span></label>
+        <input type="range" id="durSlider" min="2" max="15" step="1" value="5" oninput="updateDur(this.value)">
+        <div class="slider-range"><span>2 min</span><span>15 min</span></div>
+      </div>
+    </div>
+
+    <label class="toggle-row" for="objCheck">
+      <input type="checkbox" id="objCheck" checked>
+      <span>Include objection handling — adds caller response paths for each stage</span>
+    </label>
+    <div style="margin-top:12px">
+      <label class="field-label" for="customInstr">Custom Instructions <span style="font-weight:400;text-transform:none;font-size:10px">(optional)</span></label>
+      <textarea id="customInstr" rows="3" placeholder="E.g. Emphasise that we accept most major insurance. Avoid discussing pricing on first contact."></textarea>
+    </div>
+  </div>
+
+  <!-- ── Generate ── -->
+  <button class="gen-btn disabled" id="genBtn" onclick="handleGenerate()">Select at least one goal to generate</button>
+
+  <!-- ── Error ── -->
+  <div class="err-box" id="errBox"></div>
+
+  <!-- ── Output ── -->
+  <div class="output-card" id="outputCard">
+    <div class="out-header">
+      <div>
+        <div class="out-title">Generated Script</div>
+        <div class="out-meta" id="outMeta"></div>
+      </div>
+      <button class="copy-btn" onclick="copyOutput()">Copy JSON</button>
+    </div>
+    <div class="tab-nav">
+      <button class="active" onclick="switchTab('flow', this)">Flow</button>
+      <button onclick="switchTab('json', this)">JSON</button>
+      <button onclick="switchTab('metadata', this)">Metadata</button>
+    </div>
+    <div class="out-body">
+      <div id="tabFlow"></div>
+      <div id="tabJson" style="display:none"></div>
+      <div id="tabMeta" style="display:none"></div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────
+var CALL_GOALS = {
+  book_appointment:  { name:'Book Appointment',   desc:'Schedule a meeting or service appointment',                           cat:'scheduling', priority:1, dur:'2–4 min', incompatibleWith:['handle_complaint'] },
+  qualify_lead:      { name:'Qualify Lead',        desc:'Determine if caller is a good fit for services',                     cat:'sales',      priority:1, dur:'3–5 min', incompatibleWith:['handle_complaint'] },
+  take_message:      { name:'Take Message',        desc:'Capture a message for callback when staff is unavailable',           cat:'support',    priority:2, dur:'1–2 min', incompatibleWith:[] },
+  handle_complaint:  { name:'Handle Complaint',    desc:'Address customer concerns and resolve issues empathetically',        cat:'support',    priority:0, dur:'5–10 min',incompatibleWith:['book_appointment','qualify_lead','upsell_service'] },
+  upsell_service:    { name:'Upsell Service',      desc:'Offer additional or premium services to existing customers',         cat:'sales',      priority:2, dur:'3–5 min', incompatibleWith:['handle_complaint'] },
+  collect_feedback:  { name:'Collect Feedback',    desc:'Gather customer satisfaction ratings or survey responses',           cat:'research',   priority:3, dur:'2–4 min', incompatibleWith:[] },
+  verify_identity:   { name:'Verify Identity',     desc:'Confirm caller identity before sharing sensitive information',       cat:'security',   priority:0, dur:'1–2 min', incompatibleWith:[] },
+  provide_information:{ name:'Provide Information',desc:'Answer questions about hours, services, pricing, or location',      cat:'support',    priority:2, dur:'1–3 min', incompatibleWith:[] }
+};
+
+var GOAL_PRESETS = [
+  { id:'SALES_CALL',              name:'Sales Call',              goals:['qualify_lead','book_appointment','upsell_service'],              tone:'professional' },
+  { id:'CUSTOMER_SERVICE',        name:'Customer Service',        goals:['handle_complaint','provide_information','collect_feedback'],     tone:'empathetic' },
+  { id:'APPOINTMENT_CONFIRM',     name:'Appointment Confirmation',goals:['verify_identity','book_appointment','collect_feedback'],         tone:'friendly' },
+  { id:'LEAD_GENERATION',         name:'Lead Generation',         goals:['qualify_lead','take_message'],                                   tone:'professional' }
+];
+
+var CAT_COLORS = { scheduling:'#3B82F6', sales:'#D97706', support:'#10B981', research:'#8B5CF6', security:'#EF4444' };
+
+// ── State ─────────────────────────────────────────────────────────────────
+var state = {
+  selectedGoals: [],
+  selectedPreset: null,
+  tone: 'professional',
+  maxDuration: 5,
+  includeObjections: true,
+  customInstructions: '',
+  result: null,
+  generating: false
+};
+
+// ── Init ──────────────────────────────────────────────────────────────────
+function init() {
+  renderPresets();
+  renderGoalGrid();
+  updateGenBtn();
+}
+
+// ── Presets ───────────────────────────────────────────────────────────────
+function renderPresets() {
+  var html = GOAL_PRESETS.map(function(p) {
+    var active = state.selectedPreset === p.id;
+    return '<button class="preset-btn'+(active?' active':'')+'" onclick="applyPreset(\''+p.id+'\')">'
+      + p.name + '<span class="preset-count">('+p.goals.length+' goals)</span>'
+      + '</button>';
+  }).join('');
+  document.getElementById('presetRow').innerHTML = html;
+}
+
+function applyPreset(id) {
+  var p = GOAL_PRESETS.find(function(x){return x.id===id;});
+  if (!p) return;
+  state.selectedGoals = p.goals.slice();
+  state.selectedPreset = id;
+  document.getElementById('toneSelect').value = p.tone;
+  state.tone = p.tone;
+  renderPresets();
+  renderGoalGrid();
+  updateGenBtn();
+  checkCompatibility();
+}
+
+// ── Goal grid ─────────────────────────────────────────────────────────────
+function renderGoalGrid() {
+  // Group by category
+  var cats = {};
+  var order = ['scheduling','sales','support','research','security'];
+  order.forEach(function(c){ cats[c] = []; });
+  Object.keys(CALL_GOALS).forEach(function(id) {
+    var g = CALL_GOALS[id];
+    if (!cats[g.cat]) cats[g.cat] = [];
+    cats[g.cat].push(id);
+  });
+
+  var html = '';
+  order.forEach(function(cat) {
+    if (!cats[cat] || !cats[cat].length) return;
+    var col = CAT_COLORS[cat] || '#8A7866';
+    html += '<div class="cat-label" style="color:'+col+'">'+cat+'</div>';
+    html += '<div class="goal-grid">';
+    cats[cat].forEach(function(id) {
+      var g = CALL_GOALS[id];
+      var sel = state.selectedGoals.indexOf(id) >= 0;
+      html += '<label class="goal-item'+(sel?' selected':'')+'" onclick="toggleGoal(\''+id+'\')">'
+        + '<input type="checkbox"'+(sel?' checked':'')+'>'
+        + '<div>'
+        + '<div class="goal-name">'+g.name+'</div>'
+        + '<div class="goal-desc">'+g.desc+'</div>'
+        + '<div class="goal-dur">⏱ '+g.dur+'</div>'
+        + '</div></label>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('goalGrid').innerHTML = html;
+
+  var cnt = state.selectedGoals.length;
+  var sc = document.getElementById('selCount');
+  if (cnt > 0) {
+    sc.style.display = 'block';
+    sc.textContent = cnt + ' goal'+(cnt!==1?'s':'')+' selected';
+  } else {
+    sc.style.display = 'none';
+  }
+}
+
+function toggleGoal(id) {
+  var idx = state.selectedGoals.indexOf(id);
+  if (idx >= 0) {
+    state.selectedGoals.splice(idx, 1);
+  } else {
+    state.selectedGoals.push(id);
+  }
+  state.selectedPreset = null;
+  renderPresets();
+  renderGoalGrid();
+  updateGenBtn();
+  checkCompatibility();
+}
+
+// ── Compatibility check ───────────────────────────────────────────────────
+function checkCompatibility() {
+  var warn = document.getElementById('compatWarn');
+  var msg = null;
+  for (var i=0; i<state.selectedGoals.length && !msg; i++) {
+    var a = CALL_GOALS[state.selectedGoals[i]];
+    if (!a || !a.incompatibleWith) continue;
+    for (var j=i+1; j<state.selectedGoals.length && !msg; j++) {
+      if (a.incompatibleWith.indexOf(state.selectedGoals[j]) >= 0) {
+        var b = CALL_GOALS[state.selectedGoals[j]];
+        msg = '⚠ "'+a.name+'" and "'+(b?b.name:state.selectedGoals[j])+'" may conflict. Script will prioritise '+a.name+'.';
+      }
+    }
+  }
+  if (msg) { warn.textContent = msg; warn.style.display = 'block'; }
+  else { warn.style.display = 'none'; }
+}
+
+// ── Settings helpers ──────────────────────────────────────────────────────
+function updateDur(v) {
+  state.maxDuration = parseInt(v);
+  document.getElementById('durLabel').textContent = v + ' min';
+}
+
+// ── Generate button ───────────────────────────────────────────────────────
+function updateGenBtn() {
+  var btn = document.getElementById('genBtn');
+  var hasName = (document.getElementById('businessName').value||'').trim().length > 0;
+  if (state.generating) {
+    btn.className = 'gen-btn loading';
+    btn.textContent = '⏳ Generating script…';
+  } else if (state.selectedGoals.length === 0 && !hasName) {
+    btn.className = 'gen-btn disabled';
+    btn.textContent = 'Enter a business name and select at least one goal';
+  } else if (!hasName) {
+    btn.className = 'gen-btn disabled';
+    btn.textContent = 'Enter a business name to generate';
+  } else if (state.selectedGoals.length === 0) {
+    btn.className = 'gen-btn disabled';
+    btn.textContent = 'Select at least one goal to generate';
+  } else {
+    btn.className = 'gen-btn ready';
+    btn.textContent = '✦ Generate Script  (' + state.selectedGoals.length + ' goal' + (state.selectedGoals.length!==1?'s':'') + ')';
+  }
+}
+
+// ── Prompt builder ────────────────────────────────────────────────────────
+function buildPrompt() {
+  var toneDescs = {
+    professional: 'Formal, polished, business-appropriate',
+    friendly:     'Warm, conversational, uses first names',
+    urgent:       'Direct, action-oriented, create mild time-sensitivity',
+    empathetic:   'Understanding, patient, validate feelings before redirecting'
+  };
+
+  var langInstructions = {
+    english:    'Write the entire script in English.',
+    spanish:    'Write the entire script in Spanish (Español). All spoken lines, stage names, purposes, closing lines, and notes must be in Spanish.',
+    portuguese: 'Write the entire script in Brazilian Portuguese (Português). All spoken lines, stage names, purposes, closing lines, and notes must be in Portuguese.'
+  };
+
+  // Order goals by priority
+  var ordered = state.selectedGoals.slice().sort(function(a,b){
+    return (CALL_GOALS[a]&&CALL_GOALS[a].priority!=null?CALL_GOALS[a].priority:99)
+         - (CALL_GOALS[b]&&CALL_GOALS[b].priority!=null?CALL_GOALS[b].priority:99);
+  });
+
+  var goalLines = ordered.map(function(id, i) {
+    var g = CALL_GOALS[id];
+    return (i+1)+'. '+(g?g.name+': '+g.desc:id);
+  }).join('\n');
+
+  var businessName = (document.getElementById('businessName').value||'').trim() || '[Business Name]';
+  var bizDesc      = (document.getElementById('bizDesc').value||'').trim();
+  var custom       = (document.getElementById('customInstr').value||'').trim();
+  var objections   = document.getElementById('objCheck').checked;
+  var tone         = document.getElementById('toneSelect').value;
+  var lang         = document.getElementById('langSelect').value;
+
+  var prompt = 'You are an expert AI voice receptionist script generator.\n\n'
+    + 'Generate a concise, natural-sounding call script for an AI voice receptionist.\n\n'
+    + 'BUSINESS NAME: ' + businessName + '\n';
+
+  if (bizDesc) prompt += 'BUSINESS DESCRIPTION: ' + bizDesc + '\n';
+
+  prompt += '\nGOALS (handle in this priority order):\n' + goalLines + '\n\n'
+    + 'TONE: ' + tone + ' — ' + (toneDescs[tone]||toneDescs.professional) + '\n'
+    + 'MAX CALL DURATION: ' + state.maxDuration + ' minutes\n'
+    + 'INCLUDE OBJECTION HANDLING: ' + (objections?'Yes':'No') + '\n'
+    + 'LANGUAGE: ' + langInstructions[lang] + '\n';
+
+  if (custom) prompt += '\nSPECIAL INSTRUCTIONS:\n' + custom + '\n';
+
+  prompt += '\nReturn ONLY a valid JSON object — no preamble, no markdown fences. '
+    + 'Keep ALL spoken text to 1 short sentence max. Limit to 2–3 flow stages total. '
+    + 'Use "' + businessName + '" as the business name in any spoken lines.\n\n'
+    + 'Required JSON structure:\n'
+    + '{\n'
+    + '  "greeting": "opening line when call connects",\n'
+    + '  "flow": [\n'
+    + '    {\n'
+    + '      "stage": "stage name",\n'
+    + '      "purpose": "what this stage accomplishes",\n'
+    + '      "aiPrompts": ["what AI says to move forward"],\n'
+    + '      "callerResponses": {\n'
+    + '        "positive": "AI response when caller engages",\n'
+    + '        "negative": "AI response when caller hesitates",\n'
+    + '        "unclear": "AI response to redirect"\n'
+    + '      }\n'
+    + '    }\n'
+    + '  ],\n'
+    + '  "closing": {\n'
+    + '    "success": "close when goal(s) achieved",\n'
+    + '    "partial": "close when partial success",\n'
+    + '    "failure": "graceful close when nothing achieved"\n'
+    + '  },\n'
+    + '  "notes": ["key reminder for the AI agent"]\n'
+    + '}\n\n'
+    + 'Return ONLY the JSON object. No other text.';
+
+  return { prompt: prompt, ordered: ordered, tone: tone, lang: lang, businessName: businessName };
+}
+
+// ── Generate ──────────────────────────────────────────────────────────────
+async function handleGenerate() {
+  if (state.selectedGoals.length === 0 || state.generating) return;
+
+  state.generating = true;
+  updateGenBtn();
+  document.getElementById('errBox').style.display = 'none';
+  document.getElementById('outputCard').style.display = 'none';
+
+  var built = buildPrompt();
+
+  try {
+    var raw = await window.claude.complete({
+      messages: [{ role: 'user', content: built.prompt }]
+    });
+
+    // Strip any accidental markdown fences
+    var cleaned = raw
+      .replace(/^```(?:json)?\s*/i,'')
+      .replace(/\s*```\s*$/i,'')
+      .trim();
+
+    var script;
+    try {
+      script = JSON.parse(cleaned);
+    } catch(e) {
+      // Try to extract JSON substring
+      var m = cleaned.match(/\{[\s\S]*\}/);
+      if (m) {
+        try { script = JSON.parse(m[0]); }
+        catch(e2) { throw new Error('Claude returned invalid JSON. Try with fewer goals or shorter duration.'); }
+      } else {
+        throw new Error('Claude returned invalid JSON. Try with fewer goals or shorter duration.');
+      }
+    }
+
+    state.result = { script: script, ordered: built.ordered, tone: built.tone, lang: built.lang, businessName: built.businessName };
+    renderOutput();
+    document.getElementById('outputCard').style.display = 'block';
+    document.getElementById('outputCard').scrollIntoView({behavior:'smooth',block:'start'});
+
+  } catch(err) {
+    var eb = document.getElementById('errBox');
+    eb.textContent = '⚠ ' + (err.message || 'Generation failed. Please try again.');
+    eb.style.display = 'block';
+  }
+
+  state.generating = false;
+  updateGenBtn();
+}
+
+// ── Output rendering ──────────────────────────────────────────────────────
+function renderOutput() {
+  if (!state.result) return;
+  var r = state.result;
+  var s = r.script;
+
+  // Meta
+  var durMin = 0, durMax = 0;
+  r.ordered.forEach(function(id) {
+    var g = CALL_GOALS[id];
+    if (g && g.dur) {
+      var parts = g.dur.replace(/[^0-9–-]/g,'').split(/[–-]/).map(Number);
+      durMin += parts[0]||1;
+      durMax += parts[1]||2;
+    }
+  });
+  document.getElementById('outMeta').textContent =
+    durMin+'–'+Math.min(durMax+1,15)+' min estimate · '+r.ordered.length+' goals · '+r.tone;
+
+  // Flow tab
+  var flowHtml = '';
+  if (s.greeting) {
+    flowHtml += scriptBlock('Greeting', '#D97706', '<div class="spoken">'+esc(s.greeting)+'</div>', null);
+  }
+  if (Array.isArray(s.flow)) {
+    s.flow.forEach(function(stage, i) {
+      var inner = '';
+      if (stage.purpose) inner += '<div class="purpose">'+esc(stage.purpose)+'</div>';
+      if (Array.isArray(stage.aiPrompts)) {
+        stage.aiPrompts.forEach(function(p){ inner += '<div class="spoken">'+esc(p)+'</div>'; });
+      }
+      if (stage.callerResponses && document.getElementById('objCheck').checked) {
+        inner += '<div class="responses"><div class="resp-head">Caller Responses</div>';
+        ['positive','negative','unclear'].forEach(function(k){
+          if (stage.callerResponses[k]) {
+            inner += '<div class="resp-item"><span class="resp-tag '+k+'">'+k+'</span><span class="resp-text">'+esc(stage.callerResponses[k])+'</span></div>';
+          }
+        });
+        inner += '</div>';
+      }
+      var copyText = [stage.stage, stage.purpose].concat(stage.aiPrompts||[]).join('\n');
+      flowHtml += scriptBlock('Stage '+(i+1)+': '+(stage.stage||''), '#3B82F6', inner, copyText);
+    });
+  }
+  if (s.closing) {
+    var cInner = '';
+    if (typeof s.closing === 'string') {
+      cInner = '<div class="spoken">'+esc(s.closing)+'</div>';
+    } else {
+      ['success','partial','failure'].forEach(function(k){
+        if (s.closing[k]) {
+          cInner += '<div class="closing-item"><div class="closing-outcome">'+k+'</div><div class="spoken">'+esc(s.closing[k])+'</div></div>';
+        }
+      });
+    }
+    flowHtml += scriptBlock('Closing', '#10B981', cInner, null);
+  }
+  if (Array.isArray(s.notes) && s.notes.length) {
+    var nInner = s.notes.map(function(n){ return '<div class="note-item">'+esc(n)+'</div>'; }).join('');
+    flowHtml += scriptBlock('Agent Notes', '#8B5CF6', nInner, null);
+  }
+  document.getElementById('tabFlow').innerHTML = flowHtml || '<div style="color:var(--mute);font-size:13px">No structured output found. Check the JSON tab for raw response.</div>';
+
+  // JSON tab
+  document.getElementById('tabJson').innerHTML = '<pre>'+esc(JSON.stringify(s, null, 2))+'</pre>';
+
+  // Metadata tab
+  var metaHtml = '<div style="font-size:13px;color:var(--mute);line-height:2">'
+    + '<div><strong style="color:var(--txt)">Business:</strong> '+esc(r.businessName||'—')+'</div>'
+    + '<div><strong style="color:var(--txt)">Language:</strong> '+({english:'English',spanish:'Spanish (Español)',portuguese:'Portuguese (Português)'}[r.lang]||r.lang)+'</div>'
+    + '<div><strong style="color:var(--txt)">Goals:</strong> '+r.ordered.map(function(id){return CALL_GOALS[id]?CALL_GOALS[id].name:id;}).join(', ')+'</div>'
+    + '<div><strong style="color:var(--txt)">Priority order:</strong> '+r.ordered.map(function(id){return CALL_GOALS[id]?CALL_GOALS[id].name:id;}).join(' → ')+'</div>'
+    + '<div><strong style="color:var(--txt)">Est. duration:</strong> '+durMin+'–'+Math.min(durMax+1,15)+' min</div>'
+    + '<div><strong style="color:var(--txt)">Tone:</strong> '+r.tone+'</div>'
+    + '<div><strong style="color:var(--txt)">Objection handling:</strong> '+(document.getElementById('objCheck').checked?'Included':'Off')+'</div>';
+  if (Array.isArray(s.notes) && s.notes.length) {
+    metaHtml += '<div style="margin-top:12px;padding:12px 14px;background:rgba(217,119,6,.06);border-radius:8px;border:1px solid rgba(217,119,6,.15)">'
+      +'<div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Agent Notes</div>'
+      +s.notes.map(function(n){return '<div class="note-item">'+esc(n)+'</div>';}).join('')
+      +'</div>';
+  }
+  metaHtml += '</div>';
+  document.getElementById('tabMeta').innerHTML = metaHtml;
+}
+
+function scriptBlock(label, color, inner, copyText) {
+  var cb = copyText
+    ? '<button class="block-copy" onclick="copyText(\''+encodeURIComponent(copyText)+'\')">Copy</button>'
+    : '';
+  return '<div class="script-block">'
+    + '<div class="block-head"><span class="block-lbl" style="color:'+color+'">'+label+'</span>'+cb+'</div>'
+    + '<div class="block-body">'+inner+'</div>'
+    + '</div>';
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  ['flow','json','metadata'].forEach(function(t){
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).style.display='none';
+  });
+  document.querySelectorAll('.tab-nav button').forEach(function(b){b.classList.remove('active');});
+  var map = {flow:'tabFlow', json:'tabJson', metadata:'tabMeta'};
+  if (map[name]) document.getElementById(map[name]).style.display='block';
+  if (btn) btn.classList.add('active');
+}
+
+// ── Clipboard ─────────────────────────────────────────────────────────────
+function copyOutput() {
+  if (!state.result) return;
+  doCopy(JSON.stringify(state.result.script, null, 2));
+}
+function copyText(encoded) {
+  doCopy(decodeURIComponent(encoded));
+}
+function doCopy(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
+  } else { fallbackCopy(text); }
+}
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta);
+  ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Wire up settings listeners ────────────────────────────────────────────
+document.getElementById('toneSelect').addEventListener('change', function(e){ state.tone = e.target.value; state.selectedPreset = null; renderPresets(); });
+document.getElementById('objCheck').addEventListener('change', function(e){ state.includeObjections = e.target.checked; });
+document.getElementById('customInstr').addEventListener('input', function(e){ state.customInstructions = e.target.value; });
+document.getElementById('businessName').addEventListener('input', function(){ updateGenBtn(); });
+document.getElementById('langSelect').addEventListener('change', function(){});
+document.getElementById('bizDesc').addEventListener('input', function(){});
+
+// ── Start ─────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
