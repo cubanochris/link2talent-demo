@@ -5,10 +5,6 @@
  * Validates, parses, and stores appointments
  */
 
-// ============================================================================
-// CONFIGURATION & CONSTANTS
-// ============================================================================
-
 const REQUIRED_FIELDS = ['customer_name', 'customer_phone', 'appointment_time'];
 const APPOINTMENT_STATUS = {
   PENDING_CONFIRMATION: 'pending_confirmation',
@@ -17,12 +13,7 @@ const APPOINTMENT_STATUS = {
   FAILED: 'failed'
 };
 
-// In-memory storage (replace with database for production)
 let appointmentStore = [];
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
 
 function generateAppointmentId() {
   return `apt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -47,27 +38,24 @@ function parseAppointmentData(payload) {
 function validateAppointment(appointment) {
   const errors = [];
 
-  // Check required fields
   for (const field of REQUIRED_FIELDS) {
     if (!appointment[field]) {
       errors.push(`Missing required field: ${field}`);
     }
   }
 
-  // Validate timestamp
   if (appointment.appointment_time) {
     const timestamp = new Date(appointment.appointment_time).getTime();
     if (isNaN(timestamp)) {
-      errors.push(`Invalid appointment_time format: ${appointment.appointment_time}`);
+      errors.push(`Invalid appointment_time format`);
     }
     if (timestamp < Date.now()) {
-      errors.push(`appointment_time is in the past: ${appointment.appointment_time}`);
+      errors.push(`appointment_time is in the past`);
     }
   }
 
-  // Validate phone
   if (appointment.customer_phone && !/^\+?[0-9\s\-()]+$/.test(appointment.customer_phone)) {
-    errors.push(`Invalid phone format: ${appointment.customer_phone}`);
+    errors.push(`Invalid phone format`);
   }
 
   return {
@@ -76,124 +64,95 @@ function validateAppointment(appointment) {
   };
 }
 
-function storeAppointment(appointment, status = APPOINTMENT_STATUS.PENDING_CONFIRMATION) {
+function storeAppointment(appointment) {
   const record = {
     id: generateAppointmentId(),
     ...appointment,
-    status,
+    status: APPOINTMENT_STATUS.PENDING_CONFIRMATION,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    calendar_event_id: null,
-    error_message: null
+    calendar_event_id: null
   };
 
   appointmentStore.push(record);
-  console.log(`[appointmentHandler] Stored appointment: ${record.id}`);
+  console.log(`Stored appointment: ${record.id}`);
 
   return record;
 }
 
-function getAllAppointments(status = null) {
-  if (status) {
-    return appointmentStore.filter(apt => apt.status === status);
-  }
-  return appointmentStore;
-}
-
-// ============================================================================
-// MAIN HANDLER
-// ============================================================================
-
 module.exports = async (req, res) => {
+  // Set CORS headers to allow Retell
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Retell-Signature');
+  res.setHeader('Content-Type', 'application/json');
+
+  // Handle OPTIONS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   try {
-    // Only accept POST for webhook, GET for queries
+    // POST: Receive webhook from Retell
     if (req.method === 'POST') {
-      return handlePostAppointment(req, res);
-    } else if (req.method === 'GET') {
-      return handleGetAppointments(req, res);
-    } else {
-      return res.status(405).json({
-        success: false,
-        error: 'Method not allowed. Use POST or GET.'
+      const payload = req.body;
+
+      if (!payload || !payload.agent_id) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid payload'
+        });
+      }
+
+      console.log(`Webhook from agent: ${payload.agent_id}`);
+
+      // Parse and validate
+      const appointmentData = parseAppointmentData(payload);
+      const validation = validateAppointment(appointmentData);
+
+      if (!validation.valid) {
+        return res.status(400).json({
+          success: false,
+          error: 'Validation failed',
+          details: validation.errors
+        });
+      }
+
+      // Store
+      const stored = storeAppointment(appointmentData);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Appointment received',
+        appointment_id: stored.id,
+        status: stored.status
       });
     }
 
+    // GET: Query appointments
+    if (req.method === 'GET') {
+      const status = req.query?.status;
+      const filtered = status
+        ? appointmentStore.filter(apt => apt.status === status)
+        : appointmentStore;
+
+      return res.status(200).json({
+        success: true,
+        count: filtered.length,
+        appointments: filtered
+      });
+    }
+
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed'
+    });
+
   } catch (error) {
-    console.error('[appointmentHandler Error]', error);
+    console.error('Error:', error.message);
     return res.status(500).json({
       success: false,
-      error: 'Internal server error',
+      error: 'Server error',
       message: error.message
     });
   }
 };
-
-function handlePostAppointment(req, res) {
-  try {
-    // Parse request body
-    const payload = req.body;
-
-    if (!payload || !payload.agent_id) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid payload. Expected { agent_id, call_id, custom_fields, ... }'
-      });
-    }
-
-    console.log(`[appointmentHandler] Received webhook from agent: ${payload.agent_id}`);
-
-    // Parse appointment data
-    const appointmentData = parseAppointmentData(payload);
-
-    // Validate appointment
-    const validation = validateAppointment(appointmentData);
-    if (!validation.valid) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: validation.errors
-      });
-    }
-
-    // Store appointment
-    const storedAppointment = storeAppointment(appointmentData, APPOINTMENT_STATUS.PENDING_CONFIRMATION);
-
-    // Return success
-    return res.status(201).json({
-      success: true,
-      message: 'Appointment received and queued for calendar sync',
-      appointment_id: storedAppointment.id,
-      status: storedAppointment.status
-    });
-
-  } catch (error) {
-    console.error('[handlePostAppointment Error]', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error',
-      message: error.message
-    });
-  }
-}
-
-function handleGetAppointments(req, res) {
-  try {
-    const status = req.query?.status;
-    const appointments = getAllAppointments(status);
-
-    return res.status(200).json({
-      success: true,
-      count: appointments.length,
-      status: status || 'all',
-      appointments
-    });
-
-  } catch (error) {
-    console.error('[handleGetAppointments Error]', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error',
-      message: error.message
-    });
-  }
-}
