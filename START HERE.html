@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link2Talent — AI Digital Receptionist Package</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#0F0D0A; --bg2:#181410; --card:#221A12; --bdr:#3C2E20; --txt:#FAF8F4; --mute:#8A7866; --acc:#D97706; --gold:#F0A020; --r:14px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--txt); min-height: 100vh; }
+
+    /* HERO */
+    .hero { background: linear-gradient(160deg, #0C0A07 0%, #1A1008 55%, #231508 100%); padding: 56px 32px 48px; text-align: center; position: relative; overflow: hidden; }
+    .hero-glow { position: absolute; border-radius: 50%; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+    .logo-mark { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .logo-wm { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 20px; color: var(--txt); letter-spacing: -0.5px; }
+
+    .badge { display: inline-block; background: rgba(217,119,6,0.14); border: 1px solid rgba(217,119,6,0.3); border-radius: 100px; padding: 5px 16px; font-size: 11px; color: var(--acc); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(30px,6vw,46px); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 14px; line-height: 1.08; }
+    .hero p { font-size: 15px; color: var(--mute); line-height: 1.7; margin-bottom: 32px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: rgba(60,46,32,0.6); border: 1px solid rgba(60,46,32,0.8); border-radius: 12px; padding: 16px 10px; max-width: 500px; margin: 0 auto; }
+    .stat-v { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--acc); }
+    .stat-l { font-size: 10px; color: rgba(250,250,249,0.4); margin-top: 3px; }
+
+    /* WRAP */
+    .wrap { max-width: 780px; margin: 0 auto; padding: 52px 24px 72px; }
+
+    .sec-label { font-size: 10.5px; font-weight: 700; color: var(--acc); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; margin-top: 36px; }
+
+    /* FILE CARDS */
+    .file-card { background: var(--bg2); border: 1.5px solid var(--bdr); border-radius: 16px; padding: 22px 24px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 18px; transition: border-color .2s, transform .2s; }
+    .file-card:hover { border-color: var(--acc); transform: translateY(-2px); }
+    .file-card.featured { border-color: var(--acc); }
+    .file-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .file-name { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: var(--txt); margin-bottom: 5px; }
+    .file-desc { font-size: 13px; color: var(--mute); line-height: 1.6; margin-bottom: 10px; }
+    .tag { display: inline-block; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+    .tag-pptx { background: rgba(217,119,6,0.12); color: var(--acc); }
+    .tag-html { background: rgba(240,160,32,0.12); color: var(--gold); }
+
+    /* STEPS */
+    .steps-box { background: var(--card); border: 1px solid var(--bdr); border-radius: 16px; padding: 28px; margin: 28px 0; }
+    .steps-box h3 { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: var(--acc); margin-bottom: 20px; }
+    .step { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+    .step:last-child { margin-bottom: 0; }
+    .step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--acc); color: var(--bg); font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-title { font-family: 'Space Grotesk', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--txt); margin-bottom: 3px; }
+    .step-desc { font-size: 12.5px; color: var(--mute); line-height: 1.6; }
+
+    /* INCLUDED GRID */
+    .inc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 36px; }
+    .inc-card { background: var(--bg2); border: 1px solid var(--bdr); border-radius: 12px; padding: 18px; }
+    .inc-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--txt); margin-bottom: 12px; }
+    .inc-item { font-size: 12.5px; color: var(--mute); line-height: 2; display: flex; align-items: center; gap: 6px; }
+    .inc-item::before { content: '✓'; color: var(--acc); font-weight: 700; flex-shrink: 0; }
+
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, #1A0F05 0%, #2A1808 55%, #3A2210 100%); border-radius: 18px; padding: 32px; text-align: center; position: relative; overflow: hidden; }
+    .cta-box h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; color: var(--txt); margin-bottom: 8px; letter-spacing: -0.5px; }
+    .cta-box p { font-size: 14px; color: var(--mute); margin-bottom: 22px; line-height: 1.65; }
+    .cta-btn { display: inline-block; background: var(--acc); color: var(--bg); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 13px 28px; text-decoration: none; transition: opacity .15s, transform .15s; }
+    .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .footer { text-align: center; padding: 24px; font-size: 12px; color: rgba(250,250,249,0.25); border-top: 1px solid var(--bdr); }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .file-card { flex-direction: column; gap: 12px; }
+      .inc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-glow" style="width:500px;height:500px;top:-200px;right:-100px;background:radial-gradient(circle,rgba(217,119,6,0.1),transparent 70%);"></div>
+  <div class="hero-glow" style="width:350px;height:350px;bottom:-150px;left:-60px;background:radial-gradient(circle,rgba(240,160,32,0.06),transparent 70%);"></div>
+  <div class="hero-inner">
+    <div class="logo-mark">
+      <svg width="32" height="32" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <path d="M10 7L10 36L36 36" stroke="#D97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="10" cy="7" r="4" fill="#FAF8F4"/>
+        <circle cx="10" cy="36" r="4" fill="#D97706"/>
+        <circle cx="36" cy="36" r="4" fill="#FAF8F4"/>
+        <path d="M14 11C28 11 33 18 33 32" stroke="#D97706" stroke-width="1.5" stroke-dasharray="3 4" fill="none"/>
+      </svg>
+      <span class="logo-wm">Link<span style="color:#D97706">2</span>Talent</span>
+    </div>
+    <div class="badge">● AI Digital Receptionist</div>
+    <h1>Your Complete<br>Proposal Package</h1>
+    <p>Everything you need to understand how an AI receptionist works, what it costs, and exactly how much your business stands to save.</p>
+    <div class="stats">
+      <div style="text-align:center"><div class="stat-v">24/7</div><div class="stat-l">Always available</div></div>
+      <div style="text-align:center"><div class="stat-v">&lt;1s</div><div class="stat-l">Response time</div></div>
+      <div style="text-align:center"><div class="stat-v">$0</div><div class="stat-l">Sick days</div></div>
+      <div style="text-align:center"><div class="stat-v">3×</div><div class="stat-l">More leads</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="sec-label">Your Documents — Open in Order</div>
+
+  <div class="file-card featured">
+    <div class="file-icon" style="background:rgba(217,119,6,0.1);">📊</div>
+    <div>
+      <div class="file-name">1. AI_Digital_Receptionist_Pitch.pptx</div>
+      <div class="file-desc">The full presentation — what an AI receptionist is, how it works, industry use cases, ROI numbers, implementation timeline, and a 3-tier pricing summary. Start here for the big picture.</div>
+      <span class="tag tag-pptx">PowerPoint · Open in PowerPoint or Google Slides</span>
+    </div>
+  </div>
+
+  <div class="file-card featured">
+    <div class="file-icon" style="background:rgba(240,160,32,0.1);">🧮</div>
+    <div>
+      <div class="file-name">2. Client Pricing.html</div>
+      <div class="file-desc">Interactive pricing and savings tool — explore all three plans, calculate your exact savings vs. a human receptionist, see your after-hours revenue gap, and build a custom package with add-ons.</div>
+      <a href="Client Pricing.html" class="tag tag-html" style="text-decoration:none;">HTML · Open in browser →</a>
+    </div>
+  </div>
+
+  <div class="sec-label">Try the Live Demo</div>
+
+  <div class="file-card">
+    <div class="file-icon" style="background:rgba(217,119,6,0.08);">🤖</div>
+    <div>
+      <div class="file-name">AI Receptionist Demo</div>
+      <div class="file-desc">Have a real conversation with a live AI receptionist. Pick your industry and see exactly what your customers would experience — powered by Claude AI.</div>
+      <a href="AI Receptionist Demo.html" class="tag tag-html" style="text-decoration:none;">Live Demo · Try it now →</a>
+    </div>
+  </div>
+
+  <div class="steps-box">
+    <h3>How to Use These Materials</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Open the Pitch Deck first</div>
+        <div class="step-desc">Double-click <strong style="color:var(--txt)">AI_Digital_Receptionist_Pitch.pptx</strong> — opens in PowerPoint, Google Slides, or Keynote. This gives you the full story in 10 slides.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Open the Pricing Calculator in your browser</div>
+        <div class="step-desc">Open <strong style="color:var(--txt)">Client Pricing.html</strong> — works in any browser. No internet needed once loaded.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Run the Staff Cost Calculator</div>
+        <div class="step-desc">Click the <strong style="color:var(--txt)">Staff Calculator</strong> tab and drag the sliders to match your situation. See your monthly and annual savings update instantly.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Check your after-hours revenue gap</div>
+        <div class="step-desc">Click <strong style="color:var(--txt)">After-Hours Revenue</strong> — enter your inquiries and average customer value to see exactly how much is slipping away when you're closed.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-title">Try the Live AI Demo</div>
+        <div class="step-desc">Open <strong style="color:var(--txt)">AI Receptionist Demo.html</strong>, pick your industry, and have an actual conversation with the AI. This is exactly what your customers would experience.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">What's Included in Every Plan</div>
+  <div class="inc-grid">
+    <div class="inc-card">
+      <div class="inc-title">Standard with All Plans</div>
+      <div class="inc-item">7-day setup &amp; onboarding</div>
+      <div class="inc-item">Custom knowledge base build</div>
+      <div class="inc-item">Brand voice configuration</div>
+      <div class="inc-item">Testing &amp; quality review</div>
+      <div class="inc-item">Go-live support</div>
+      <div class="inc-item">Ongoing optimization</div>
+    </div>
+    <div class="inc-card">
+      <div class="inc-title">Your AI Receptionist Will</div>
+      <div class="inc-item">Answer every inquiry instantly</div>
+      <div class="inc-item">Capture every lead automatically</div>
+      <div class="inc-item">Book appointments 24/7</div>
+      <div class="inc-item">Represent your brand professionally</div>
+      <div class="inc-item">Never call in sick</div>
+      <div class="inc-item">Work nights, weekends &amp; holidays</div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div style="position:relative;z-index:1;">
+      <h2>Ready to Get Started?</h2>
+      <p>Book a free 30-minute demo call — we'll set up a live AI receptionist for your business and show you exactly how it works before you commit to anything.</p>
+      <a href="mailto:Link2Talent@outlook.com" class="cta-btn">📅 Schedule Your Free Demo →</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Prepared by Link2Talent · link2talent@outlook.com · All pricing subject to final proposal</div>
+
+</body>
+</html>

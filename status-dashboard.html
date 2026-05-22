@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Needs My Attention</title>
+    <style>
+        :root {
+            color-scheme: light;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .last-updated {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .priority-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .priority-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+
+        .priority-card.urgent {
+            border-left-color: #dc3545;
+        }
+
+        .priority-card.important {
+            border-left-color: #fd7e14;
+        }
+
+        .priority-card.normal {
+            border-left-color: #0dcaf0;
+        }
+
+        .priority-card .count {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .priority-card .label {
+            font-size: 14px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+
+        .item:hover {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-weight: 500;
+            color: #212529;
+            flex: 1;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.urgent {
+            background: #fee;
+            color: #dc3545;
+        }
+
+        .status-badge.important {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.info {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0d6efd;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>What Needs My Attention</h1>
+        <div class="last-updated">Loading...</div>
+    </div>
+
+    <div class="priority-summary">
+        <div class="priority-card urgent">
+            <div class="count" id="urgent-count">-</div>
+            <div class="label">Urgent</div>
+        </div>
+        <div class="priority-card important">
+            <div class="count" id="important-count">-</div>
+            <div class="label">Important</div>
+        </div>
+        <div class="priority-card normal">
+            <div class="count" id="normal-count">-</div>
+            <div class="label">To Review</div>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <span>Loading your status...</span>
+        </div>
+    </div>
+
+    <script>
+        // Store data in localStorage to remember last state
+        const STORAGE_KEY = 'status-dashboard-data';
+
+        function formatDate(date) {
+            const now = new Date();
+            const then = new Date(date);
+            const diffMs = now - then;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+
+            return then.toLocaleDateString();
+        }
+
+        function renderEmpty(title, message) {
+            return `
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">${title}</div>
+                    </div>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✓</div>
+                        <div>${message}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderItem(item) {
+            return `
+                <div class="item">
+                    <div class="item-header">
+                        <div class="item-title">${item.title}</div>
+                        ${item.priority ? `<span class="status-badge ${item.priority}">${item.priority}</span>` : ''}
+                    </div>
+                    ${item.description ? `<div style="color: #6c757d; font-size: 14px; margin-bottom: 8px;">${item.description}</div>` : ''}
+                    <div class="item-meta">
+                        ${item.from ? `<span>From: ${item.from}</span>` : ''}
+                        ${item.date ? `<span>${formatDate(item.date)}</span>` : ''}
+                        ${item.status ? `<span>${item.status}</span>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateCounts(data) {
+            let urgent = 0, important = 0, normal = 0;
+
+            Object.values(data).forEach(section => {
+                if (Array.isArray(section.items)) {
+                    section.items.forEach(item => {
+                        if (item.priority === 'urgent') urgent++;
+                        else if (item.priority === 'important') important++;
+                        else normal++;
+                    });
+                }
+            });
+
+            document.getElementById('urgent-count').textContent = urgent;
+            document.getElementById('important-count').textContent = important;
+            document.getElementById('normal-count').textContent = normal;
+        }
+
+        function renderData(data) {
+            let html = '';
+
+            // Twilio Messages
+            if (data.messages) {
+                if (data.messages.items && data.messages.items.length > 0) {
+                    html += `
+                        <div class="section">
+                            <div class="section-header">
+                                <div class="section-title">Recent Messages</div>
+                                <span class="badge">${data.messages.items.length}</span>
+                            </div>
+                            ${data.messages.items.map(renderItem).join('')}
+                        </div>
+                    `;
+                } else if (data.messages.error) {
+                    html += `<div class="error">Messages: ${data.messages.error}</div>`;
+                } else {
+                    html += renderEmpty('Messages', 'No recent messages');
+                }
+            }
+
+            // Placeholder sections for future connectors
+            html += renderEmpty('Tasks', 'Connect your task manager to see action items here');
+            html += renderEmpty('Calendar', 'Connect your calendar to see upcoming meetings here');
+            html += renderEmpty('Email', 'Connect your email to see unread messages here');
+
+            document.getElementById('content').innerHTML = html;
+            updateCounts(data);
+
+            // Update last refreshed time
+            document.querySelector('.last-updated').textContent =
+                `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        async function fetchTwilioMessages() {
+            try {
+                // Try to get recent inbound messages from today
+                const today = new Date().toISOString().split('T')[0];
+
+                const result = await window.cowork.callMcpTool(
+                    'mcp__885f2b2d-e709-43ea-a80a-28935cb6e043__twilio__search',
+                    {
+                        query: 'list recent messages',
+                        source: 'api',
+                        product: 'api_v2010',
+                        limit: 5
+                    }
+                );
+
+                // For now, return structure - actual API calls would need AccountSid
+                return {
+                    items: [],
+                    note: 'Twilio connected - configure AccountSid to fetch messages'
+                };
+            } catch (error) {
+                console.error('Error fetching Twilio messages:', error);
+                return {
+                    error: error.message || 'Unable to fetch messages'
+                };
+            }
+        }
+
+        async function loadData() {
+            try {
+                // Load from cache first for instant display
+                const cached = localStorage.getItem(STORAGE_KEY);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    renderData(data);
+                }
+
+                // Fetch fresh data
+                const data = {
+                    messages: await fetchTwilioMessages(),
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to cache
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+                // Render fresh data
+                renderData(data);
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="error">
+                        Error loading status: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html>
