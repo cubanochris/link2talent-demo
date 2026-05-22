@@ -1,0 +1,29 @@
+{
+  "name": "ai-receptionist",
+  "version": "1.0.0",
+  "description": "AI Receptionist with appointment booking and voice integration",
+  "main": "api/appointments.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node Backend/server.js",
+    "test": "node Backend/test-appointmentHandler.js",
+    "start": "node Backend/server.js"
+  },
+  "keywords": [
+    "ai",
+    "receptionist",
+    "appointments",
+    "retell",
+    "voice"
+  ],
+  "author": "Link2Talent",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "24.x",
+    "npm": "9.x"
+  }
+}
