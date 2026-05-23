@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +63,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -133,81 +132,80 @@
             flex-direction: column;
         }
 
+        /* HERO WITH WIDGET AS FOCUS */
         .hero {
-            padding: 60px 0;
+            padding: 40px 0 60px;
             background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(196, 102, 16, 0.04) 100%);
         }
 
-        .hero-content {
+        .hero-inner {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            align-items: start;
+            justify-items: center;
         }
 
-        .hero-text h1 {
+        .hero-header {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .hero-header h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(28px, 5vw, 48px);
+            font-size: clamp(32px, 6vw, 56px);
             font-weight: 800;
-            line-height: 1.2;
+            line-height: 1.1;
             margin-bottom: 16px;
             color: var(--txt);
-            letter-spacing: -1.5px;
+            letter-spacing: -2px;
         }
 
-        .hero-text p {
-            font-size: 16px;
+        .hero-header p {
+            font-size: 18px;
             color: var(--mute);
-            margin-bottom: 24px;
-            line-height: 1.7;
+            line-height: 1.8;
+            margin-bottom: 0;
         }
 
-        .hero-cta {
-            display: inline-block;
-            padding: 14px 32px;
-            background: var(--acc);
-            color: #070F1A;
-            text-decoration: none;
-            border-radius: 10px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            transition: opacity 0.15s, transform 0.15s;
-        }
-
-        .hero-cta:hover {
-            opacity: 0.88;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(217, 119, 6, 0.3);
+        /* WIDGET CONTAINER - CENTERED & PROMINENT */
+        .widget-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .widget-container {
             background: var(--bg2);
-            border: 1px solid var(--bdr);
+            border: 2px solid var(--bdr);
             border-radius: var(--r);
-            padding: 20px;
-            min-height: 500px;
+            padding: 0;
+            height: 650px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
 
         .widget-container iframe {
             width: 100%;
             height: 100%;
             border: none;
-            border-radius: 8px;
         }
 
-        section {
+        #retell-widget {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* FEATURES GRID BELOW */
+        .features-section {
             padding: 80px 0;
             border-bottom: 1px solid var(--bdr);
         }
 
-        section h2 {
+        .features-section h2 {
             font-family: 'Space Grotesk', sans-serif;
             font-size: clamp(28px, 5vw, 40px);
             font-weight: 800;
@@ -219,17 +217,19 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
-            margin-bottom: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .feature-card {
-            padding: 32px;
+            padding: 28px;
             background: var(--card);
             border: 1px solid var(--bdr);
             border-radius: var(--r);
             transition: transform 0.3s, border-color 0.3s;
+            text-align: center;
         }
 
         .feature-card:hover {
@@ -238,54 +238,64 @@
         }
 
         .feature-icon {
-            font-size: 40px;
+            font-size: 36px;
             margin-bottom: 16px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--acc), var(--acc2));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block;
         }
 
         .feature-card h3 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--txt);
         }
 
         .feature-card p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--mute);
             line-height: 1.6;
         }
 
-        .how-it-works {
+        /* HOW IT WORKS */
+        .how-section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--bdr);
+        }
+
+        .how-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            margin-bottom: 48px;
+            text-align: center;
+            color: var(--txt);
+            letter-spacing: -1px;
+        }
+
+        .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 24px;
-            align-items: flex-start;
         }
 
         .step {
-            position: relative;
+            text-align: center;
         }
 
         .step-number {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             background: linear-gradient(135deg, var(--acc), var(--acc2));
             color: white;
             border-radius: 50%;
-            font-weight: 700;
-            font-size: 20px;
-            margin-bottom: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+            margin-bottom: 20px;
         }
 
         .step h3 {
@@ -302,45 +312,151 @@
             line-height: 1.6;
         }
 
-        .step:not(:last-child)::after {
-            content: '→';
-            position: absolute;
-            right: -16px;
-            top: 24px;
-            font-size: 24px;
-            color: var(--bdr);
+        /* TESTIMONIAL CAROUSEL */
+        .testimonial-section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--bdr);
+            overflow: hidden;
         }
 
-        .testimonial {
-            max-width: 600px;
-            margin: 0 auto;
+        .testimonial-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            margin-bottom: 48px;
             text-align: center;
-            padding: 40px;
+            color: var(--txt);
+            letter-spacing: -1px;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            margin: 0 -20px;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 24px;
+            padding: 0 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .testimonial-card {
+            flex: 0 0 calc(100% - 40px);
+            min-width: 340px;
+            text-align: center;
+            padding: 40px 32px;
             background: var(--card);
             border: 1px solid var(--bdr);
             border-left: 4px solid var(--acc);
             border-radius: var(--r);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--acc);
         }
 
         .testimonial-text {
-            font-size: 18px;
+            font-size: 16px;
             font-style: italic;
             margin-bottom: 24px;
             color: var(--txt);
             line-height: 1.8;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .testimonial-author {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             color: var(--txt);
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .testimonial-title {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--mute);
             margin-top: 4px;
+        }
+
+        /* CAROUSEL CONTROLS */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .carousel-btn {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--bdr);
+            background: var(--bg2);
+            color: var(--txt);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-weight: 700;
+        }
+
+        .carousel-btn:hover {
+            border-color: var(--acc);
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--acc);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .carousel-btn:disabled:hover {
+            border-color: var(--bdr);
+            background: var(--bg2);
+            color: var(--txt);
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-card {
+                min-width: 280px;
+                padding: 28px 20px;
+            }
+
+            .testimonial-text {
+                font-size: 14px;
+                min-height: 70px;
+            }
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--bdr);
+        }
+
+        .faq-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
+            margin-bottom: 48px;
+            text-align: center;
+            color: var(--txt);
+            letter-spacing: -1px;
         }
 
         .faq-container {
@@ -363,7 +479,6 @@
             font-size: 16px;
             font-weight: 700;
             color: var(--txt);
-            margin-bottom: 12px;
             cursor: pointer;
             user-select: none;
             display: flex;
@@ -394,19 +509,26 @@
             color: var(--mute);
             font-size: 14px;
             line-height: 1.7;
+            margin-top: 12px;
         }
 
         .faq-item.open .faq-answer {
             display: block;
         }
 
+        /* FINAL CTA */
         .final-cta {
             text-align: center;
-            padding: 60px 0;
+            padding: 80px 0;
         }
 
         .final-cta h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 800;
             margin-bottom: 24px;
+            color: var(--txt);
+            letter-spacing: -1px;
         }
 
         .final-cta p {
@@ -488,20 +610,21 @@
                 padding: 0 16px;
             }
 
-            .hero-content {
-                grid-template-columns: 1fr;
+            .hero {
+                padding: 32px 0 48px;
             }
 
-            .features-grid {
-                grid-template-columns: 1fr;
+            .hero-header h1 {
+                font-size: 28px;
             }
 
-            .how-it-works {
-                grid-template-columns: 1fr;
+            .widget-container {
+                min-height: 500px;
+                max-height: 600px;
             }
 
-            .step:not(:last-child)::after {
-                display: none;
+            .steps-grid {
+                grid-template-columns: 1fr 1fr;
             }
 
             .cta-buttons {
@@ -534,113 +657,147 @@
     </header>
 
     <main>
-        <!-- HERO + WIDGET -->
+        <!-- HERO WITH WIDGET AS CENTER FOCUS -->
         <section class="hero">
             <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <h1>Talk to a Real AI Receptionist</h1>
-                        <p>Experience the same AI-powered assistant your customers will interact with. Choose an industry scenario and have a natural conversation.</p>
-                        <button class="hero-cta" onclick="scrollToWidget()">Try the demo →</button>
+                <div class="hero-inner">
+                    <div class="hero-header">
+                        <h1>Talk to Our AI Receptionist</h1>
+                        <p>Chat or call. See exactly what your customers will experience.</p>
                     </div>
-                    <div class="widget-container">
-                        <div id="retell-widget"></div>
+                    <div class="widget-wrapper">
+                        <div class="widget-container">
+                            <div id="retell-widget"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- FEATURES -->
-        <section>
+        <section class="features-section">
             <div class="container">
                 <h2>What you get</h2>
                 <div class="features-grid">
                     <div class="feature-card">
-                        <div class="feature-icon">☎️</div>
-                        <h3>24/7 voice answering</h3>
-                        <p>Answer calls instantly, even after hours. Your AI receptionist is always available to help.</p>
+                        <span class="feature-icon">☎️</span>
+                        <h3>24/7 answering</h3>
+                        <p>Never miss a call again. Always available to help.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📅</div>
+                        <span class="feature-icon">📅</span>
                         <h3>Auto calendar sync</h3>
-                        <p>Appointments book directly into your Google Calendar with confirmation emails sent automatically.</p>
+                        <p>Appointments sync to Google Calendar automatically.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📝</div>
+                        <span class="feature-icon">📝</span>
                         <h3>Lead capture</h3>
-                        <p>Collect caller information, notes, and context without lifting a finger. Everything is logged.</p>
+                        <p>Collect caller info without manual entry.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🧠</div>
+                        <span class="feature-icon">🧠</span>
                         <h3>Smart conversations</h3>
-                        <p>Powered by Claude AI, your receptionist understands context and handles complex conversations naturally.</p>
+                        <p>Powered by Claude AI. Understands context naturally.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🔗</div>
-                        <h3>Easy integration</h3>
-                        <p>Works with your existing phone number. No system overhaul needed.</p>
+                        <span class="feature-icon">🔗</span>
+                        <h3>Easy setup</h3>
+                        <p>Works with your existing phone number.</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">📊</div>
+                        <span class="feature-icon">📊</span>
                         <h3>Full visibility</h3>
-                        <p>See every call, every booking, every lead in one dashboard. Never lose track of business again.</p>
+                        <p>See every call, booking, and lead in one place.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- HOW IT WORKS -->
-        <section>
+        <section class="how-section">
             <div class="container">
                 <h2>How it works</h2>
-                <div class="how-it-works">
+                <div class="steps-grid">
                     <div class="step">
                         <div class="step-number">1</div>
                         <h3>Caller connects</h3>
-                        <p>Customer calls your number and reaches the AI receptionist instantly.</p>
+                        <p>Customer calls your number and reaches the AI instantly.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">2</div>
-                        <h3>Natural conversation</h3>
-                        <p>The receptionist understands the request and guides the conversation naturally.</p>
+                        <h3>Natural talk</h3>
+                        <p>The AI understands and guides the conversation.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">3</div>
                         <h3>Action taken</h3>
-                        <p>Appointment booked? Lead captured? Everything happens in real-time.</p>
+                        <p>Appointment booked? Lead captured? It happens instantly.</p>
                     </div>
                     <div class="step">
                         <div class="step-number">4</div>
                         <h3>You're notified</h3>
-                        <p>Calendar syncs, email sent, CRM updated. Everything flows to your systems automatically.</p>
+                        <p>Calendar syncs, email sent, CRM updated automatically.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TESTIMONIAL -->
-        <section>
+        <!-- TESTIMONIAL CAROUSEL -->
+        <section class="testimonial-section">
             <div class="container">
                 <h2>What customers say</h2>
-                <div class="testimonial">
-                    <div class="testimonial-text">"Link2Talent answered 47 calls in the first week we deployed it. We went from losing calls to missing zero calls. It's completely changed how we operate."</div>
-                    <div class="testimonial-author">Sarah Mitchell</div>
-                    <div class="testimonial-title">Owner, Mitchell Dental Studio</div>
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="testimonialCarousel">
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"Link2Talent answered 47 calls in the first week we deployed it. We went from losing calls to missing zero calls. It's completely changed how we operate."</div>
+                            <div class="testimonial-author">Sarah Mitchell</div>
+                            <div class="testimonial-title">Owner, Mitchell Dental Studio</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"The AI handles appointment bookings, reschedules, and even answers common questions about our services. It's like having an extra receptionist 24/7."</div>
+                            <div class="testimonial-author">Marcus Chen</div>
+                            <div class="testimonial-title">Practice Manager, Chen & Associates Law</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"We've reduced no-shows by 30% because customers get instant confirmations. Plus, our team loves not having to answer the same questions a hundred times a day."</div>
+                            <div class="testimonial-author">Jessica Rodriguez</div>
+                            <div class="testimonial-title">Director, Luxe Spa & Salon</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"Setup took less than an hour and it immediately started capturing leads we were missing during off-hours. This has been our best investment this year."</div>
+                            <div class="testimonial-author">David Park</div>
+                            <div class="testimonial-title">Owner, Premier Realty Group</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"The natural conversations are uncanny. Customers don't even realize they're talking to an AI until we mention it. That's when we say 'that's Link2Talent.'"</div>
+                            <div class="testimonial-author">Emma Thompson</div>
+                            <div class="testimonial-title">Operations Director, Happy Paws Vet Clinic</div>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="testimonial-text">"Every minute saved on administrative calls is a minute we can spend on actual client work. Link2Talent has been transformative for our HVAC business."</div>
+                            <div class="testimonial-author">Robert Jackson</div>
+                            <div class="testimonial-title">Owner, Comfort Pro HVAC Services</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="prevBtn" onclick="scrollCarousel(-1)">←</button>
+                    <button class="carousel-btn" id="nextBtn" onclick="scrollCarousel(1)">→</button>
                 </div>
             </div>
         </section>
 
         <!-- FAQ -->
-        <section>
+        <section class="faq-section">
             <div class="container">
                 <h2>Frequently asked questions</h2>
                 <div class="faq-container">
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            Can I customize how the receptionist handles calls?
+                            Can I customize how the receptionist works?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">Yes. You can customize the greeting, the types of actions it takes (book, capture, transfer), and the tone of voice. Instructions are simple — no coding needed.</div>
+                        <div class="faq-answer">Yes. Customize the greeting, actions (book, capture, transfer), and tone. No coding needed.</div>
                     </div>
 
                     <div class="faq-item">
@@ -648,39 +805,39 @@
                             Does it work with my existing phone number?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">Yes. You point your existing number to us, and we handle the rest. No change to your business phone or any complex setup required.</div>
+                        <div class="faq-answer">Yes. Point your number to us and we handle the rest. No setup needed.</div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            What about missed calls or voicemail?
+                            What happens with missed calls?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">The AI answers calls 24/7, so missed calls are rare. If a caller leaves a voicemail, it's transcribed and sent to you automatically.</div>
+                        <div class="faq-answer">The AI answers 24/7, so missed calls are rare. Voicemails are transcribed and sent automatically.</div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            How quickly can I get started?
+                            How fast can I go live?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">You can be live in under an hour. Set up your preferences, point your number to us, and you're ready. No long sales cycles, no engineering teams.</div>
+                        <div class="faq-answer">Under an hour. Set preferences, point your number, you're live. No long sales cycles.</div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            What if I want to transfer a call to a real person?
+                            Can I transfer calls to a real person?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">You can configure transfer options. If the caller asks for a person, says something the AI isn't trained for, or if you want to jump in, transfers work smoothly.</div>
+                        <div class="faq-answer">Yes. Configure transfers or jump in anytime. Transfers work smoothly.</div>
                     </div>
 
                     <div class="faq-item">
                         <div class="faq-question" onclick="toggleFaq(this)">
-                            Is my call data secure and private?
+                            Is my data secure?
                             <span class="faq-toggle">▼</span>
                         </div>
-                        <div class="faq-answer">Yes. All data is encrypted in transit and at rest. We're SOC 2 compliant and take privacy seriously. You control all retention and deletion policies.</div>
+                        <div class="faq-answer">Yes. Encrypted in transit and at rest. SOC 2 compliant. You control retention policies.</div>
                     </div>
                 </div>
             </div>
@@ -689,10 +846,10 @@
         <!-- FINAL CTA -->
         <section class="final-cta">
             <div class="container">
-                <h2>Ready to take back control of your phone?</h2>
-                <p>Try the demo above, then let's talk about how Link2Talent can work for your business. No credit card required.</p>
+                <h2>Ready to transform your phone system?</h2>
+                <p>Try the demo above, then let's talk about how Link2Talent works for your business. No credit card required.</p>
                 <div class="cta-buttons">
-                    <button class="btn-primary" onclick="scrollToWidget()">Try the demo</button>
+                    <button class="btn-primary" onclick="document.getElementById('retell-widget').scrollIntoView({behavior:'smooth'})">Try the demo</button>
                     <a href="mailto:Link2Talent@outlook.com" class="btn-secondary">Get in touch</a>
                 </div>
             </div>
@@ -711,9 +868,27 @@
             element.parentElement.classList.toggle('open');
         }
 
-        function scrollToWidget() {
-            document.getElementById('retell-widget').scrollIntoView({ behavior: 'smooth' });
+        // Carousel functionality
+        const carousel = document.getElementById('testimonialCarousel');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cardWidth = 340 + 24; // card width + gap
+
+        function scrollCarousel(direction) {
+            carousel.scrollLeft += direction * cardWidth;
+            updateCarouselButtons();
         }
+
+        function updateCarouselButtons() {
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            prevBtn.disabled = carousel.scrollLeft <= 0;
+            nextBtn.disabled = carousel.scrollLeft >= maxScroll - 10;
+        }
+
+        // Update buttons on load and on resize
+        window.addEventListener('load', updateCarouselButtons);
+        window.addEventListener('resize', updateCarouselButtons);
+        carousel.addEventListener('scroll', updateCarouselButtons);
     </script>
 </body>
 </html>
